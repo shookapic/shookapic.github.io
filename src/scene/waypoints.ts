@@ -8,7 +8,7 @@ export type Waypoint = {
 }
 
 export const waypoints: Waypoint[] = [
-  { cam: new THREE.Vector3(0, 0, 10), target: new THREE.Vector3(0, 0, 0) }, // Hero
+  { cam: new THREE.Vector3(0, 0.6, 10.5), target: new THREE.Vector3(0, -0.9, 0) }, // Hero: title + rooftop hacker
   { cam: new THREE.Vector3(9, -3, -5), target: new THREE.Vector3(14, -4, -14) }, // About
   { cam: new THREE.Vector3(-10, -9, -19), target: new THREE.Vector3(-10, -10, -32) }, // Projects
   { cam: new THREE.Vector3(12, -17, -41), target: new THREE.Vector3(12, -18, -52) }, // Skills
