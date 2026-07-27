@@ -88,46 +88,140 @@ function Laptop({ position }: { position: [number, number, number] }) {
   )
 }
 
-function HackerFigure({ position }: { position: [number, number, number] }) {
+// Timeline the hacker follows on a loop: types for a while, gets up, walks to
+// the parapet to look out over the city, then walks back and sits again.
+// Each keyframe: [time, offsetX, offsetZ, rotY, pose]
+type Pose = 'sit' | 'stand'
+const KEYFRAMES: [number, number, number, number, Pose][] = [
+  [0, 0, 0, 0.35, 'sit'],
+  [9, 0, 0, 0.35, 'sit'],
+  [11.2, 2.3, 1.85, -2.4, 'stand'],
+  [15.5, 2.3, 1.85, -2.4, 'stand'],
+  [17.7, 0, 0, 0.35, 'stand'],
+  [19, 0, 0, 0.35, 'sit'],
+  [24, 0, 0, 0.35, 'sit'],
+]
+const CYCLE = KEYFRAMES[KEYFRAMES.length - 1][0]
+
+function sampleTimeline(t: number) {
+  const time = t % CYCLE
+  let i = 0
+  while (i < KEYFRAMES.length - 2 && time > KEYFRAMES[i + 1][0]) i++
+  const [t0, x0, z0, r0, poseA] = KEYFRAMES[i]
+  const [t1, x1, z1, r1, poseB] = KEYFRAMES[i + 1]
+  const span = Math.max(t1 - t0, 0.0001)
+  const raw = THREE.MathUtils.clamp((time - t0) / span, 0, 1)
+  const f = raw * raw * (3 - 2 * raw)
+  const moving = poseA !== poseB || x0 !== x1 || z0 !== z1
+  return {
+    x: THREE.MathUtils.lerp(x0, x1, f),
+    z: THREE.MathUtils.lerp(z0, z1, f),
+    rotY: THREE.MathUtils.lerp(r0, r1, f),
+    pose: f < 0.5 ? poseA : poseB,
+    moving,
+  }
+}
+
+function HackerFigure({ basePosition }: { basePosition: [number, number, number] }) {
+  const root = useRef<THREE.Group>(null!)
   const head = useRef<THREE.Group>(null!)
+  const sitParts = useRef<THREE.Group>(null!)
+  const standParts = useRef<THREE.Group>(null!)
+  const legL = useRef<THREE.Group>(null!)
+  const legR = useRef<THREE.Group>(null!)
+  const armL = useRef<THREE.Group>(null!)
+  const armR = useRef<THREE.Group>(null!)
+
   useFrame((state) => {
-    // subtle head-bob while typing
-    head.current.rotation.x = 0.28 + Math.sin(state.clock.elapsedTime * 2.1) * 0.03
+    const s = sampleTimeline(state.clock.elapsedTime)
+    root.current.position.set(basePosition[0] + s.x, basePosition[1], basePosition[2] + s.z)
+    root.current.rotation.y = s.rotY
+
+    const sitting = s.pose === 'sit'
+    sitParts.current.visible = sitting
+    standParts.current.visible = !sitting
+
+    if (sitting) {
+      head.current.rotation.x = 0.28 + Math.sin(state.clock.elapsedTime * 2.1) * 0.03
+    } else {
+      // idle glance while standing, walk-cycle swing while moving
+      head.current.rotation.x = 0
+      head.current.rotation.y = s.moving ? 0 : Math.sin(state.clock.elapsedTime * 0.8) * 0.25
+      const swing = s.moving ? Math.sin(state.clock.elapsedTime * 9) * 0.55 : 0
+      legL.current.rotation.x = swing
+      legR.current.rotation.x = -swing
+      armL.current.rotation.x = -swing * 0.7
+      armR.current.rotation.x = swing * 0.7
+    }
   })
+
   const cloth = <meshStandardMaterial color="#0e1018" roughness={0.95} />
+
   return (
-    <group position={position} rotation={[0, 0.35, 0]}>
-      {/* crossed-legs base */}
-      <mesh position={[0, 0.12, 0]} scale={[1, 0.55, 0.8]}>
-        <sphereGeometry args={[0.34, 24, 16]} />
-        {cloth}
-      </mesh>
-      {/* hunched torso */}
-      <mesh position={[0, 0.5, -0.02]} rotation={[0.35, 0, 0]} scale={[1, 1.25, 0.75]}>
-        <sphereGeometry args={[0.26, 24, 16]} />
-        {cloth}
-      </mesh>
-      {/* hood + head */}
+    <group ref={root} position={basePosition}>
+      {/* hood + head, shared by both poses */}
       <group ref={head} position={[0, 0.86, 0.08]}>
         <mesh scale={[1, 1.1, 1.15]}>
           <sphereGeometry args={[0.17, 24, 16]} />
           {cloth}
         </mesh>
-        {/* shadowed face opening, lit by the screen */}
         <mesh position={[0, -0.01, 0.13]} scale={[0.8, 0.9, 0.5]}>
           <sphereGeometry args={[0.12, 16, 12]} />
           <meshStandardMaterial color="#233b33" roughness={0.4} emissive="#39ff88" emissiveIntensity={0.25} />
         </mesh>
       </group>
-      {/* arms reaching to the keyboard */}
-      <mesh position={[-0.2, 0.42, 0.24]} rotation={[0.9, 0.15, 0.35]}>
-        <capsuleGeometry args={[0.06, 0.34, 6, 12]} />
-        {cloth}
-      </mesh>
-      <mesh position={[0.2, 0.42, 0.24]} rotation={[0.9, -0.15, -0.35]}>
-        <capsuleGeometry args={[0.06, 0.34, 6, 12]} />
-        {cloth}
-      </mesh>
+
+      {/* seated pose: crossed legs, hunched torso, arms reaching the keyboard */}
+      <group ref={sitParts}>
+        <mesh position={[0, 0.12, 0]} scale={[1, 0.55, 0.8]}>
+          <sphereGeometry args={[0.34, 24, 16]} />
+          {cloth}
+        </mesh>
+        <mesh position={[0, 0.5, -0.02]} rotation={[0.35, 0, 0]} scale={[1, 1.25, 0.75]}>
+          <sphereGeometry args={[0.26, 24, 16]} />
+          {cloth}
+        </mesh>
+        <mesh position={[-0.2, 0.42, 0.24]} rotation={[0.9, 0.15, 0.35]}>
+          <capsuleGeometry args={[0.06, 0.34, 6, 12]} />
+          {cloth}
+        </mesh>
+        <mesh position={[0.2, 0.42, 0.24]} rotation={[0.9, -0.15, -0.35]}>
+          <capsuleGeometry args={[0.06, 0.34, 6, 12]} />
+          {cloth}
+        </mesh>
+      </group>
+
+      {/* standing pose: upright torso, walking legs and swinging arms */}
+      <group ref={standParts}>
+        <mesh position={[0, 0.62, 0]} scale={[0.85, 1.05, 0.7]}>
+          <sphereGeometry args={[0.26, 24, 16]} />
+          {cloth}
+        </mesh>
+        <group ref={legL} position={[-0.1, 0.3, 0]}>
+          <mesh position={[0, -0.15, 0]}>
+            <capsuleGeometry args={[0.075, 0.3, 6, 10]} />
+            {cloth}
+          </mesh>
+        </group>
+        <group ref={legR} position={[0.1, 0.3, 0]}>
+          <mesh position={[0, -0.15, 0]}>
+            <capsuleGeometry args={[0.075, 0.3, 6, 10]} />
+            {cloth}
+          </mesh>
+        </group>
+        <group ref={armL} position={[-0.24, 0.62, 0]}>
+          <mesh position={[0, -0.18, 0]}>
+            <capsuleGeometry args={[0.055, 0.32, 6, 10]} />
+            {cloth}
+          </mesh>
+        </group>
+        <group ref={armR} position={[0.24, 0.62, 0]}>
+          <mesh position={[0, -0.18, 0]}>
+            <capsuleGeometry args={[0.055, 0.32, 6, 10]} />
+            {cloth}
+          </mesh>
+        </group>
+      </group>
     </group>
   )
 }
@@ -164,7 +258,7 @@ export default function HackerScene() {
       </mesh>
       <Beacon position={[-4.3, ROOF_Y + 0.75, 2.5]} />
 
-      <HackerFigure position={[0.35, ROOF_Y + 0.2, 0.75]} />
+      <HackerFigure basePosition={[0.35, ROOF_Y + 0.2, 0.75]} />
       <Laptop position={[0.28, ROOF_Y + 0.2, 1.55]} />
     </group>
   )
