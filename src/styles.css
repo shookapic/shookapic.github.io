@@ -1,432 +1,1488 @@
+/* ==========================================================================
+   Cédric Roulof — portfolio
+   Editorial page, cream by default and warm near-black in dark. One accent,
+   the colour of a compiler error caret.
+
+   Tokens are named by role, not by hue, because they invert between themes:
+   --bg/--raised are surfaces, --fg/--fg-soft/--muted/--faint are text.
+   ========================================================================== */
+
 :root {
-  --bg: #0b0a1a;
-  --bg-2: #1a0f2e;
-  --ember: #ff6b35;
-  --gold: #ffc857;
-  --ink: #e8e6f0;
-  --muted: #8a86a3;
-  --panel: rgba(20, 16, 40, 0.82);
-  --display: 'Bebas Neue', sans-serif;
-  --body: 'Manrope', system-ui, sans-serif;
+  color-scheme: light;
+
+  /* Surface */
+  --bg: #f5f1e4;
+  --raised: #fbf9f2;
+  --line: #e3ddcd;
+
+  /* Ink */
+  --fg: #171815;
+  --fg-soft: #2c2e2a;
+  --muted: #74776f;
+  --faint: #a3a69e;
+
+  /* The single accent */
+  --signal: #c2262e;
+  --signal-tint: #f7e5e2;
+
+  /* The one exception to the single-accent rule: an availability light, where
+     green carries a meaning red cannot. Used only on .live-dot. */
+  --live: #2f8f4e;
+
+  --display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --gutter: clamp(20px, 5vw, 64px);
+  --rhythm: clamp(72px, 10vw, 132px);
+  --shell: 1120px;
+
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
-* {
-  margin: 0;
-  padding: 0;
+/* The accent has to gain luminance on a dark ground — #c2262e is legible on
+   cream but muddy on near-black, so dark mode uses a lifted red. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #14140f;
+  --raised: #1c1c16;
+  --line: #33332a;
+
+  --fg: #f3f0e3;
+  --fg-soft: #d9d5c6;
+  --muted: #96948a;
+  --faint: #6e6c62;
+
+  --signal: #ff6a5c;
+  --signal-tint: #2e1a16;
+
+  --live: #5fd47a;
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
-html,
-body,
-#root {
-  height: 100%;
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  margin: 0;
   background: var(--bg);
-  color: var(--ink);
-  font-family: var(--body);
-  overflow-x: hidden;
+  color: var(--fg-soft);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.6;
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* ---------- Loading ---------- */
-.loading {
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--display);
+  color: var(--fg);
+  font-weight: 700;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+}
+
+p {
+  margin: 0;
+}
+
+ul,
+ol,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--bg);
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--fg);
+  color: var(--bg);
+  padding: 12px 18px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.skip-link:focus {
+  left: 12px;
+  top: 12px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  /* It mirrors text that is already on screen; keep it out of copied selections. */
+  user-select: none;
+}
+
+/* ------------------------------------------------------ scroll progress -- */
+
+.progress {
   position: fixed;
-  inset: 0;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 2px;
+  pointer-events: none;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--signal);
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------- shell -- */
+
+.shell {
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.section {
+  padding-block: var(--rhythm);
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 76px;
+}
+
+/* The marquee brings its own border, so the section right after it must not
+   draw a second one. */
+.shell > .section:first-child {
+  border-top: 0;
+}
+
+/* Work and Elsewhere read as one block, so no rule and no full rhythm. */
+.section-tight {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.section-head {
+  margin-bottom: clamp(36px, 5vw, 60px);
+}
+
+.section-label,
+.stack-group,
+.work-meta,
+.status,
+.tags li,
+.stat-value,
+.stat-label,
+.timeline-year,
+.hero-where,
+.hero-note,
+.side-tech,
+.contact-cvs-label {
+  font-family: var(--mono);
+  font-weight: 500;
+}
+
+.section-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-size: clamp(1.75rem, 4.4vw, 2.75rem);
+  max-width: 20ch;
+  /* Loose enough that the per-word clip boxes clear ascenders and descenders. */
+  line-height: 1.22;
+}
+
+/* ----------------------------------------------------------------- nav -- */
+
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
   z-index: 50;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 60px;
+  padding: 0 var(--gutter);
+  border-bottom: 1px solid transparent;
+  transition: background 240ms var(--ease), border-color 240ms var(--ease);
+}
+
+.nav.is-lifted {
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom-color: var(--line);
+}
+
+.nav-name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-stretch: 108%;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 28px);
+  min-width: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: clamp(14px, 2.4vw, 30px);
+}
+
+.nav-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.lang {
+  display: flex;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.lang-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  padding: 5px 7px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 160ms var(--ease), color 160ms var(--ease);
+}
+
+.lang-btn:hover {
+  color: var(--fg);
+}
+
+.lang-btn.is-active {
+  background: var(--signal);
+  color: var(--bg);
+}
+
+.theme-toggle {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1.2rem;
-  background: var(--bg);
-  transition: opacity 0.5s ease;
-}
-
-.loading-done {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.loading-core {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, var(--gold), var(--ember) 60%, #7a2408);
-  animation: pulse 1.4s ease-in-out infinite;
-  box-shadow: 0 0 40px rgba(255, 107, 53, 0.6);
-}
-
-.loading p {
-  font-family: var(--display);
-  font-size: 1.2rem;
-  letter-spacing: 0.3em;
-  color: var(--muted);
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-}
-
-/* ---------- Nav dots ---------- */
-.nav-dots {
-  position: fixed;
-  right: 1.4rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 40;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.dot {
-  position: relative;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid var(--muted);
+  width: 28px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 2px;
   background: transparent;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.dot:hover,
-.dot:focus-visible {
-  border-color: var(--gold);
-}
-
-.dot:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 3px;
-}
-
-.dot.active {
-  background: var(--ember);
-  border-color: var(--ember);
-  box-shadow: 0 0 12px rgba(255, 107, 53, 0.8);
-}
-
-.dot-label {
-  position: absolute;
-  right: 1.6rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-family: var(--display);
-  font-size: 0.95rem;
-  letter-spacing: 0.15em;
-  color: var(--gold);
-  opacity: 0;
-  white-space: nowrap;
-  pointer-events: none;
-  transition: opacity 0.2s ease;
-}
-
-.dot:hover .dot-label,
-.dot:focus-visible .dot-label {
-  opacity: 1;
-}
-
-/* ---------- Scroll hint ---------- */
-.scroll-hint {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 40;
-  font-family: var(--display);
-  letter-spacing: 0.35em;
-  font-size: 0.9rem;
   color: var(--muted);
+  cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
+}
+
+.theme-toggle:hover {
+  color: var(--signal);
+  border-color: var(--signal);
+}
+
+.nav-links a {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  padding-block: 4px;
+  border-bottom: 1px solid transparent;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
+}
+
+.nav-links a:hover {
+  color: var(--fg);
+}
+
+.nav-links a.is-active {
+  color: var(--signal);
+  border-bottom-color: var(--signal);
+}
+
+/* ---------------------------------------------------------------- hero -- */
+
+.hero {
+  padding-top: clamp(112px, 19vh, 190px);
+  /* The marquee below supplies its own separation. */
+  padding-bottom: clamp(56px, 8vw, 96px);
+}
+
+.hero-where {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: clamp(22px, 4vw, 40px);
 }
 
-.chevron {
-  animation: bob 1.6s ease-in-out infinite;
-  color: var(--ember);
-  font-size: 1.1rem;
+.hero-where-sep {
+  color: var(--signal);
 }
 
-@keyframes bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(6px);
-  }
+/* Shrink-wraps the name so the caret rule can be exactly as wide as it.
+   The padding reserves the row the absolutely-positioned caret sits in. */
+.hero-mark {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  padding-bottom: clamp(14px, 2.4vw, 26px);
 }
 
-/* ---------- Scroll-synced DOM pages ---------- */
-.dom-page {
+/* Held to one line at every width: a wrapped h1 makes the fit-content wrapper
+   snap to the full column and the caret rule below it overshoots the text.
+   8.4vw keeps the name inside the gutters from 320px up — the measured advance
+   for this string is ~9.7x the font size, against ~9.4x available. */
+.hero-name {
+  font-size: clamp(1.5rem, 8.4vw, 5.5rem);
+  font-weight: 800;
+  font-stretch: 118%;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The signature — the name annotated the way clang annotates a symbol.
+   Absolutely positioned on purpose: the tilde run is a long nowrap string, and
+   in flow its intrinsic width leaks into the fit-content wrapper above and
+   blows the page out horizontally. Out of flow it contributes nothing, and
+   left/right:0 sizes it to exactly the name box. */
+.hero-caret {
   position: absolute;
   left: 0;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 14vh;
-  pointer-events: none;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
-.dom-page > * {
-  pointer-events: auto;
-}
-
-/* ---------- 3D HTML panels ---------- */
-.panel,
-.projects-grid {
-  animation: panel-in 0.6s ease both;
-}
-
-@keyframes panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.panel {
-  width: 460px;
-  max-width: 82vw;
-  background: var(--panel);
-  border: 1px solid rgba(255, 200, 87, 0.18);
-  border-radius: 14px;
-  padding: 1.6rem 1.8rem;
-  backdrop-filter: blur(8px);
-}
-
-.bio {
-  line-height: 1.65;
-  color: var(--ink);
-  margin-bottom: 1.2rem;
-}
-
-.timeline {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-}
-
-.timeline li {
-  display: flex;
-  gap: 0.9rem;
-  align-items: baseline;
-  font-size: 0.92rem;
-  color: var(--muted);
-}
-
-.timeline .year {
-  font-family: var(--display);
-  letter-spacing: 0.08em;
-  color: var(--gold);
-  min-width: 5.2rem;
-  font-size: 1rem;
-}
-
-/* ---------- Projects ---------- */
-.projects-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 240px);
-  gap: 0.9rem;
-}
-
-.project-card {
+.caret-rule::before {
+  content: '^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~';
   display: block;
-  background: var(--panel);
-  border: 1px solid rgba(255, 200, 87, 0.15);
-  border-radius: 12px;
-  padding: 1.1rem 1.2rem;
-  text-decoration: none;
-  color: var(--ink);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: var(--mono);
+  font-size: clamp(1rem, 3.4vw, 2rem);
+  line-height: 0.7;
+  color: var(--signal);
+  white-space: nowrap;
 }
 
-.project-card:hover,
-.project-card:focus-visible {
-  transform: translateY(-4px);
-  border-color: var(--ember);
-  box-shadow: 0 8px 30px rgba(255, 107, 53, 0.25);
-}
-
-.project-card h3 {
-  font-family: var(--display);
-  font-size: 1.35rem;
-  letter-spacing: 0.06em;
-  color: var(--gold);
-  margin-bottom: 0.35rem;
-}
-
-.project-card p {
-  font-size: 0.82rem;
-  line-height: 1.5;
+.hero-note {
+  font-size: 13px;
   color: var(--muted);
-  margin-bottom: 0.7rem;
+  margin-top: clamp(18px, 2.6vw, 26px);
+  /* Reserved so the line typing itself out does not shove the lede around. */
+  min-height: 2.6em;
+}
+
+.note-kw {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.type-caret {
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  margin-left: 1px;
+  background: var(--signal);
+  vertical-align: -0.15em;
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.hero-lede {
+  font-size: clamp(1.125rem, 2.1vw, 1.45rem);
+  line-height: 1.5;
+  color: var(--fg-soft);
+  max-width: 46ch;
+  margin-top: clamp(24px, 3.4vw, 36px);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: clamp(30px, 4vw, 44px);
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 13px 22px;
+  border: 1px solid var(--fg);
+  border-radius: 2px;
+  transition: background 160ms var(--ease), color 160ms var(--ease),
+    border-color 160ms var(--ease), transform 160ms var(--ease);
+}
+
+/* Movement on hover comes from useMagnetic writing an inline transform, so the
+   transition here must stay slow enough to smooth it but not fight it. */
+.btn {
+  transition-property: background, color, border-color, transform;
+  transition-duration: 160ms, 160ms, 160ms, 260ms;
+}
+
+.btn-solid {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.btn-solid:hover {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.btn-quiet {
+  border-color: var(--line);
+  color: var(--fg-soft);
+}
+
+.btn-quiet:hover {
+  border-color: var(--fg);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin-top: clamp(48px, 7vw, 84px);
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.stat {
+  background: var(--bg);
+  padding: 20px 22px;
+}
+
+.stat-value {
+  font-size: clamp(1.5rem, 3.4vw, 2rem);
+  font-weight: 500;
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* ------------------------------------------------------------ featured -- */
+
+.work {
+  position: relative;
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: clamp(18px, 3vw, 40px);
+  padding: clamp(30px, 4vw, 46px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.work:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.work::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--gutter) * -0.5);
+  top: clamp(30px, 4vw, 46px);
+  bottom: 0;
+  width: 2px;
+  background: var(--signal);
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 320ms var(--ease);
+}
+
+.work:hover::before {
+  transform: scaleY(1);
+}
+
+.status {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.status-flagship {
+  color: var(--signal);
+  background: var(--signal-tint);
+  border-color: color-mix(in srgb, var(--signal) 24%, transparent);
+}
+
+.status-shipping,
+.status-live {
+  color: var(--fg);
+  border-color: var(--faint);
+}
+
+.work-name {
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  font-stretch: 115%;
+  transition: color 160ms var(--ease);
+}
+
+.work:hover .work-name {
+  color: var(--signal);
+}
+
+.work-meta {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+.work-desc {
+  margin-top: 18px;
+  max-width: 62ch;
+  color: var(--fg-soft);
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 6px;
+  margin-top: 20px;
 }
 
-.tags span {
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
-  padding: 0.15rem 0.55rem;
-  border-radius: 99px;
-  border: 1px solid rgba(255, 107, 53, 0.45);
-  color: var(--ember);
-}
-
-/* ---------- Contact ---------- */
-.contact-panel {
-  text-align: center;
-}
-
-.contact-lead {
-  color: var(--ink);
-  margin-bottom: 1.2rem;
-}
-
-.cv-row {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.7rem;
-  margin-bottom: 1.3rem;
-}
-
-.cv-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.1rem;
-  min-width: 84px;
-  padding: 0.7rem 1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 200, 87, 0.3);
-  background: rgba(255, 107, 53, 0.08);
-  text-decoration: none;
-  color: var(--ink);
-  transition: all 0.2s ease;
-}
-
-.cv-btn:hover,
-.cv-btn:focus-visible {
-  background: var(--ember);
-  border-color: var(--ember);
-  color: #14060a;
-}
-
-.cv-btn strong {
-  font-family: var(--display);
-  font-size: 1.25rem;
-  letter-spacing: 0.12em;
-}
-
-.cv-btn span {
-  font-size: 0.72rem;
-  opacity: 0.8;
-}
-
-.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.contact-links a {
-  color: var(--gold);
-  text-decoration: none;
-  font-size: 0.95rem;
-}
-
-.contact-links a:hover {
-  text-decoration: underline;
-}
-
-/* ---------- Fallback site ---------- */
-.fallback {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 4rem 1.5rem 6rem;
-  background: linear-gradient(180deg, var(--bg), var(--bg-2));
-}
-
-.fb-hero {
-  margin-bottom: 4rem;
-}
-
-.fallback h1 {
-  font-family: var(--display);
-  font-size: clamp(3rem, 10vw, 5.5rem);
-  letter-spacing: 0.04em;
-  line-height: 1;
-}
-
-.fb-title {
-  font-family: var(--display);
-  font-size: 1.6rem;
-  letter-spacing: 0.3em;
-  color: var(--gold);
-  margin-top: 0.5rem;
-}
-
-.fb-loc {
+.tags li {
+  font-size: 11px;
+  letter-spacing: 0.06em;
   color: var(--muted);
-  margin-top: 0.4rem;
+  padding: 4px 9px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--raised);
 }
 
-.fallback section {
-  margin-bottom: 3.5rem;
+.work-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 22px;
 }
 
-.fallback h2 {
-  font-family: var(--display);
-  font-size: 2.2rem;
-  letter-spacing: 0.08em;
-  color: var(--ember);
-  margin-bottom: 1.2rem;
+.work-links a {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--fg);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
 }
 
-.fallback .projects-grid {
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+.work-links a:hover {
+  color: var(--signal);
+  border-bottom-color: var(--signal);
 }
 
-.fb-skills span {
-  font-size: 0.85rem;
-  padding: 0.35rem 0.8rem;
+/* ------------------------------------------------------- side projects -- */
+
+.side-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: 16px;
 }
 
-.fallback .cv-row {
-  justify-content: flex-start;
+.side {
+  display: block;
+  height: 100%;
+  padding: 24px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  transition: border-color 160ms var(--ease), transform 160ms var(--ease);
 }
 
-.fallback .contact-links {
-  align-items: flex-start;
+.side:hover {
+  border-color: var(--fg);
+  transform: translateY(-2px);
 }
 
-@media (max-width: 700px) {
-  .projects-grid {
-    grid-template-columns: repeat(2, 200px);
+.side-name {
+  font-size: 1.15rem;
+  font-stretch: 108%;
+}
+
+.side-desc {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-soft);
+  margin-top: 10px;
+}
+
+.side-tech {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  margin-top: 16px;
+}
+
+.side-more {
+  margin-top: 28px;
+}
+
+.side-more a {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 3px;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
+}
+
+.side-more a:hover {
+  color: var(--signal);
+  border-bottom-color: var(--signal);
+}
+
+/* --------------------------------------------------------------- stack -- */
+
+.stack-row {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 20px;
+  align-items: baseline;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+
+.stack-row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.stack-group {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.stack .tags {
+  margin-top: 0;
+}
+
+/* --------------------------------------------------------------- about -- */
+
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 6vw, 76px);
+  align-items: start;
+}
+
+.about-prose p {
+  max-width: 44ch;
+  color: var(--fg-soft);
+}
+
+.about-prose p + p {
+  margin-top: 18px;
+}
+
+.about-side {
+  display: grid;
+  gap: 14px;
+}
+
+.about-sub {
+  font-size: 11px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-stretch: normal;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 18px;
+}
+
+.about-sub:first-child {
+  margin-top: 0;
+}
+
+.facts {
+  margin-top: 26px;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.facts dt {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.facts dd {
+  font-size: 15px;
+  margin-top: 2px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 22px;
+}
+
+/* A rail that draws downward as the list arrives. It is a chronology, so the
+   direction carries meaning. */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 1px;
+  background: var(--signal);
+  opacity: 0.35;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1500ms var(--ease) 160ms;
+}
+
+.timeline.is-visible::before {
+  transform: scaleY(1);
+}
+
+.timeline li {
+  position: relative;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+}
+
+.timeline li:first-child {
+  border-top: 0;
+  padding-top: 2px;
+}
+
+/* Tick joining each entry to the rail. */
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -22px;
+  top: 24px;
+  width: 14px;
+  height: 1px;
+  background: var(--signal);
+  opacity: 0.45;
+}
+
+.timeline li:first-child::before {
+  top: 12px;
+}
+
+.timeline-year {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 5px;
+}
+
+.timeline-label {
+  display: block;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.timeline-detail {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* ---------------------------------------------------------- experience -- */
+
+.role {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: clamp(18px, 3vw, 40px);
+  padding: clamp(26px, 3.5vw, 40px) 0;
+  border-top: 1px solid var(--line);
+}
+
+.role:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.role-period {
+  display: block;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--fg);
+}
+
+.role-place {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  margin-top: 6px;
+}
+
+.role-company {
+  font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+  font-stretch: 110%;
+}
+
+.role-title {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.role-stack {
+  color: var(--faint);
+}
+
+.role-stack::before {
+  content: ' · ';
+}
+
+.role-points {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+  max-width: 62ch;
+}
+
+.role-points li {
+  position: relative;
+  padding-left: 20px;
+  line-height: 1.55;
+}
+
+.role-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 9px;
+  height: 1px;
+  background: var(--signal);
+}
+
+/* ------------------------------------------------------------- contact -- */
+
+.contact {
+  padding-bottom: clamp(56px, 8vw, 96px);
+}
+
+.contact-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-stretch: normal;
+  letter-spacing: -0.01em;
+  font-size: clamp(2rem, 5.4vw, 3.4rem);
+  line-height: 1.2;
+  max-width: 16ch;
+  margin-top: 14px;
+}
+
+.availability {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.live-dot {
+  position: relative;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--live);
+}
+
+.live-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid var(--live);
+  animation: ring 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes ring {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
-  .nav-dots {
-    right: 0.8rem;
+  60% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+/* The offset lives on the row, not the link — as a flex item, a margin-top on
+   the email alone drops it below the copy button. */
+.contact-email-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: clamp(28px, 4vw, 40px);
+}
+
+.copy {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
+}
+
+.copy:hover {
+  color: var(--fg);
+  border-color: var(--fg);
+}
+
+.copy.is-copied {
+  color: var(--signal);
+  border-color: var(--signal);
+  background: var(--signal-tint);
+}
+
+.contact-email {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: clamp(0.95rem, 2.6vw, 1.6rem);
+  color: var(--fg);
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 4px;
+  word-break: break-word;
+  transition: color 160ms var(--ease), border-color 160ms var(--ease);
+}
+
+.contact-email:hover {
+  color: var(--signal);
+  border-bottom-color: var(--signal);
+}
+
+.contact-cvs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 18px;
+  margin-top: clamp(40px, 6vw, 64px);
+}
+
+.contact-cvs-label {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact-cvs ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.contact-cvs a {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--raised);
+  transition: border-color 160ms var(--ease), color 160ms var(--ease);
+}
+
+.contact-cvs a:hover {
+  border-color: var(--fg);
+  color: var(--signal);
+}
+
+.contact-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin-top: clamp(52px, 8vw, 88px);
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--faint);
+}
+
+.contact-foot a {
+  transition: color 160ms var(--ease);
+}
+
+.contact-foot a:hover {
+  color: var(--signal);
+}
+
+/* -------------------------------------------------------------- motion -- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 640ms var(--ease), transform 640ms var(--ease);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Section headings observe once, at the header, and release the label and the
+   rule inside them — one observer instead of three per section. */
+.section-head.is-visible .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* One observer on the list, per-item delay set inline. Cheaper than an
+   observer per card and it keeps the cascade order predictable. */
+.stagger > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 560ms var(--ease), transform 560ms var(--ease);
+}
+
+.stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* Directional entrances. `.is-visible` already resets transform to none, so a
+   modifier only has to state where the element travels from. */
+.reveal.from-left,
+.stagger.from-left > * {
+  transform: translateX(-38px);
+}
+
+.reveal.from-right,
+.stagger.from-right > * {
+  transform: translateX(38px);
+}
+
+/* Word-by-word heading reveal: each word rises out of its own clipping box. */
+.words {
+  display: inline;
+}
+
+/* The clip box is exactly one line tall, so masked words never overlap the line
+   above. `overflow: hidden` moves an inline-block's baseline to its bottom
+   margin edge, hence the explicit vertical-align. Headings that use this need a
+   line-height loose enough to clear their own descenders — see .section-title. */
+.word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: inherit;
+}
+
+.word-in {
+  display: inline-block;
+  transform: translateY(105%);
+  transition: transform 780ms var(--ease);
+}
+
+.words.is-visible .word-in {
+  transform: none;
+}
+
+/* A rule that draws in from the left under every section heading. */
+.section-rule {
+  display: block;
+  height: 1px;
+  background: var(--line);
+  margin-top: clamp(22px, 3vw, 32px);
+  opacity: 1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 900ms var(--ease) 180ms;
+}
+
+.section-rule.is-visible {
+  transform: scaleX(1);
+}
+
+/* ------------------------------------------------------------- marquee -- */
+
+.marquee {
+  overflow: hidden;
+  border-block: 1px solid var(--line);
+  padding-block: 14px;
+  background: var(--raised);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+
+.marquee-shift {
+  transform: translateX(var(--scroll-shift, 0px));
+  will-change: transform;
+}
+
+.marquee-run {
+  display: flex;
+  flex: none;
+  gap: 0;
+}
+
+.marquee-run li {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 40px);
+  padding-right: clamp(20px, 3vw, 40px);
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.marquee-sep {
+  color: var(--signal);
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* Exactly one of the two identical runs, so the wrap is seamless. */
+    transform: translateX(-50%);
+  }
+}
+
+/* The hero plays on load rather than on scroll — it is already in view. */
+.hero > * {
+  animation: rise 760ms var(--ease) both;
+}
+
+.hero-where {
+  animation-delay: 60ms;
+}
+
+.hero-mark {
+  animation-delay: 140ms;
+}
+
+/* Nested inside .hero-mark, so it is not covered by the .hero > * rule. */
+.hero-caret {
+  animation: sweep 900ms var(--ease) 480ms both;
+}
+
+.hero-note {
+  animation-delay: 620ms;
+}
+
+.hero-lede {
+  animation-delay: 700ms;
+}
+
+.hero-actions {
+  animation-delay: 780ms;
+}
+
+.stats {
+  animation-delay: 860ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes sweep {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------------------------------------------------------- responsive -- */
+
+@media (max-width: 1024px) {
+  .about {
+    grid-template-columns: 1fr;
+  }
+
+  .about-prose p {
+    max-width: 60ch;
+  }
+}
+
+@media (max-width: 720px) {
+  body {
+    font-size: 16px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .work {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .work::before {
+    left: calc(var(--gutter) * -0.4);
+  }
+
+  .stack-row,
+  .role {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .reveal.from-left,
+  .reveal.from-right,
+  .stagger.from-left > *,
+  .stagger.from-right > * {
+    /* Shorter travel on narrow screens, where 38px is most of the gutter. */
+    transform: translateX(-18px);
+  }
+
+  .reveal.from-right,
+  .stagger.from-right > * {
+    transform: translateX(18px);
+  }
+
+  /* The section links scroll rather than disappear — five labels plus the two
+     toggles cannot fit a phone, and the French labels are longer still. */
+  .nav-links {
+    gap: 14px;
+    flex: 1 1 auto;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-links li {
+    flex: none;
+  }
+
+  .nav-links a {
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .hero-actions .btn {
+    flex: 1 1 auto;
+    text-align: center;
+  }
+}
+
+@media (max-width: 820px) {
+  .nav-name {
+    display: none;
+  }
+
+  .nav {
+    justify-content: flex-end;
+  }
+
+  .nav-right {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal,
+  .reveal.is-visible,
+  .reveal.from-left,
+  .reveal.from-right,
+  .stagger > *,
+  .stagger.is-visible > *,
+  .word-in,
+  .words.is-visible .word-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0ms !important;
+  }
+
+  .section-rule,
+  .section-rule.is-visible {
+    transform: scaleX(1);
+    transition: none;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+
+  .marquee-shift {
+    transform: none;
+  }
+
+  .hero > *,
+  .hero-caret {
+    animation: none;
+    clip-path: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .side:hover {
+    transform: none;
+  }
+
+  /* The work bar is a hover indicator — it snaps instead of sliding, but must
+     stay collapsed. The timeline rail is content, so it just appears. */
+  .work::before {
+    transition: none;
+  }
+
+  .timeline::before {
+    transition: none;
+    transform: scaleY(1);
+  }
+
+  .type-caret,
+  .live-dot::after {
+    animation: none;
+  }
+
+  .live-dot::after {
+    opacity: 0.4;
   }
 }

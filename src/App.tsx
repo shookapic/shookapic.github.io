@@ -1,29 +1,39 @@
-import { useMemo } from 'react'
-import Experience from './scene/Experience.tsx'
-import Overlay from './ui/Overlay.tsx'
-import LoadingScreen from './ui/LoadingScreen.tsx'
-import FallbackSite from './ui/FallbackSite.tsx'
-
-function canUse3D(): boolean {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
-  try {
-    const canvas = document.createElement('canvas')
-    return !!(canvas.getContext('webgl2') || canvas.getContext('webgl'))
-  } catch {
-    return false
-  }
-}
+import About from './components/About.tsx'
+import Experience from './components/Experience.tsx'
+import FeaturedWork from './components/FeaturedWork.tsx'
+import Footer from './components/Footer.tsx'
+import Hero from './components/Hero.tsx'
+import Marquee from './components/Marquee.tsx'
+import Nav from './components/Nav.tsx'
+import ProjectGrid from './components/ProjectGrid.tsx'
+import ScrollProgress from './components/ScrollProgress.tsx'
+import Stack from './components/Stack.tsx'
+import { useContent } from './components/useContent.ts'
 
 export default function App() {
-  const enable3D = useMemo(canUse3D, [])
-
-  if (!enable3D) return <FallbackSite />
+  const { ui } = useContent()
 
   return (
     <>
-      <Experience />
-      <Overlay />
-      <LoadingScreen />
+      <a className="skip-link" href="#work">
+        {ui.skipToWork}
+      </a>
+      <ScrollProgress />
+      <Nav />
+      <main>
+        <div className="shell">
+          <Hero />
+        </div>
+        <Marquee />
+        <div className="shell">
+          <FeaturedWork />
+          <ProjectGrid />
+          <Experience />
+          <Stack />
+          <About />
+          <Footer />
+        </div>
+      </main>
     </>
   )
 }

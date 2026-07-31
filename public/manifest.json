@@ -1,10 +1,11 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "C. Roulof",
+  "name": "Cédric Roulof — Software engineer",
+  "description": "Fullstack and systems developer in Paris. Web applications, REST APIs, and developer tooling on LLVM/Clang.",
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "16x16 32x32 48x48",
       "type": "image/x-icon"
     },
     {
@@ -20,6 +21,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#f5f1e4",
+  "background_color": "#f5f1e4"
 }
