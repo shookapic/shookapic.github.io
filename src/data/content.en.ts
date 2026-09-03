@@ -59,6 +59,7 @@ const en: Content = {
     { id: 'work', label: 'Work' },
     { id: 'experience', label: 'Experience' },
     { id: 'stack', label: 'Stack' },
+    { id: 'security', label: 'Security' },
     { id: 'about', label: 'About' },
     { id: 'contact', label: 'Contact' },
   ],
@@ -68,6 +69,7 @@ const en: Content = {
     elsewhere: { label: 'Elsewhere', title: 'Other things I have built' },
     experience: { label: 'Experience', title: 'A year of shipping in production' },
     stack: { label: 'Stack', title: 'What I reach for' },
+    security: { label: 'Security', title: 'The offensive-security side' },
     about: { label: 'About', title: 'Where this comes from' },
     contact: { label: 'Contact', title: 'Tell me what you are building.' },
   },
@@ -204,6 +206,38 @@ const en: Content = {
     { group: 'Games', items: ['Unreal Engine 5', 'Unity', 'Three.js'] },
   ],
 
+  security: {
+    lede: `Offensive security is where I started and where I still spend my evenings. I have taught it, competed in it, and I keep score on TryHackMe — which is a public, verifiable record rather than a line on a CV.`,
+    profileUrl: 'https://tryhackme.com/p/sh00kapic',
+    profileLabel: 'tryhackme.com/p/sh00kapic',
+    profileCta: 'The full profile is on',
+    stats: [
+      { value: '0x9', label: 'TryHackMe rank', note: 'Mage' },
+      { value: 'Top 4%', label: 'global standing', note: 'rank #86,794' },
+      { value: '103', label: 'rooms completed' },
+      { value: '14', label: 'badges earned' },
+    ],
+    hallTitle: 'Hall of fame',
+    hall: [
+      {
+        title: '0x9 — Mage',
+        meta: 'TryHackMe · level 59',
+        detail: `Ninth rank tier on the platform, inside the top 4% of its users. 103 rooms cleared across the offensive and defensive tracks, and 14 badges along the way.`,
+        url: 'https://tryhackme.com/p/sh00kapic',
+      },
+      {
+        title: 'Chisel — top 10 fastest',
+        meta: 'Epitech · 2025',
+        detail: `A three-week offensive-security programme: find the vulnerability, exploit it, write the remediation. I finished among the ten fastest of the cohort.`,
+      },
+      {
+        title: 'Cybersecurity, taught',
+        meta: 'Epitech · 2024',
+        detail: `Built and delivered the introductory cybersecurity module for first-year students — the fastest way to find out how well you actually understand an attack.`,
+      },
+    ],
+  },
+
   education: [
     {
       school: 'Keimyung University — Seongso Campus',
@@ -219,14 +253,9 @@ const en: Content = {
 
   highlights: [
     {
-      year: '2025',
-      label: 'Chisel, Epitech — top 10 fastest finishers across a three-week offensive-security programme: finding vulnerabilities, exploiting them, proposing remediations.',
-    },
-    {
       year: '2024',
       label: 'Grand prize at the Innov4Safe hackathon, Préfecture de La Réunion — an intelligent system that reports local field data automatically during cyclone events.',
     },
-    { year: '2024', label: 'Taught introductory cybersecurity to first-year students.' },
   ],
 
   about: {

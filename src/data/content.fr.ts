@@ -59,6 +59,7 @@ const fr: Content = {
     { id: 'work', label: 'Projets' },
     { id: 'experience', label: 'Expérience' },
     { id: 'stack', label: 'Stack' },
+    { id: 'security', label: 'Sécurité' },
     { id: 'about', label: 'À propos' },
     { id: 'contact', label: 'Contact' },
   ],
@@ -68,6 +69,7 @@ const fr: Content = {
     elsewhere: { label: 'Ailleurs', title: 'Ce que j’ai construit à côté' },
     experience: { label: 'Expérience', title: 'Un an à livrer en production' },
     stack: { label: 'Stack', title: 'Ce que j’utilise au quotidien' },
+    security: { label: 'Sécurité', title: 'Le versant sécurité offensive' },
     about: { label: 'À propos', title: 'D’où tout cela vient' },
     contact: { label: 'Contact', title: 'Dites-moi ce que vous construisez.' },
   },
@@ -204,6 +206,38 @@ const fr: Content = {
     { group: 'Jeux vidéo', items: ['Unreal Engine 5', 'Unity', 'Three.js'] },
   ],
 
+  security: {
+    lede: `La sécurité offensive, c’est là que j’ai commencé et là que je passe encore mes soirées. Je l’ai enseignée, je l’ai pratiquée en compétition, et je tiens le compte sur TryHackMe — un relevé public et vérifiable plutôt qu’une ligne sur un CV.`,
+    profileUrl: 'https://tryhackme.com/p/sh00kapic',
+    profileLabel: 'tryhackme.com/p/sh00kapic',
+    profileCta: 'Le profil complet est sur',
+    stats: [
+      { value: '0x9', label: 'rang TryHackMe', note: 'Mage' },
+      { value: 'Top 4%', label: 'classement mondial', note: 'rang n° 86 794' },
+      { value: '103', label: 'rooms terminées' },
+      { value: '14', label: 'badges obtenus' },
+    ],
+    hallTitle: 'Panthéon',
+    hall: [
+      {
+        title: '0x9 — Mage',
+        meta: 'TryHackMe · niveau 59',
+        detail: `Neuvième palier de la plateforme, dans les 4 % les mieux classés. 103 rooms terminées sur les parcours offensifs et défensifs, et 14 badges en chemin.`,
+        url: 'https://tryhackme.com/p/sh00kapic',
+      },
+      {
+        title: 'Chisel — top 10 des plus rapides',
+        meta: 'Epitech · 2025',
+        detail: `Un programme de sécurité offensive de trois semaines : trouver la vulnérabilité, l’exploiter, rédiger la remédiation. Terminé parmi les dix plus rapides de la promotion.`,
+      },
+      {
+        title: 'Cybersécurité, enseignée',
+        meta: 'Epitech · 2024',
+        detail: `Conception et animation du module d’introduction à la cybersécurité pour les première année — le moyen le plus rapide de savoir si l’on comprend vraiment une attaque.`,
+      },
+    ],
+  },
+
   education: [
     {
       school: 'Keimyung University — campus de Seongso',
@@ -219,14 +253,9 @@ const fr: Content = {
 
   highlights: [
     {
-      year: '2025',
-      label: 'Chisel, Epitech — parmi les 10 plus rapides d’un programme de sécurité offensive de trois semaines : trouver des vulnérabilités, les exploiter, proposer des remédiations.',
-    },
-    {
       year: '2024',
       label: 'Grand prix du hackathon Innov4Safe, Préfecture de La Réunion — un système intelligent qui remonte automatiquement les données de terrain pendant les épisodes cycloniques.',
     },
-    { year: '2024', label: 'Enseignement d’une introduction à la cybersécurité aux étudiants de première année.' },
   ],
 
   about: {

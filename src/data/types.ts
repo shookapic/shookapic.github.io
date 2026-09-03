@@ -18,6 +18,15 @@ export type SideProject = {
   url: string
 }
 
+export type SecurityStat = { value: string; label: string; note?: string }
+
+export type Trophy = {
+  title: string
+  meta: string
+  detail: string
+  url?: string
+}
+
 export type Role = {
   company: string
   title: string
@@ -56,11 +65,20 @@ export type Content = {
   stats: { value: string; label: string }[]
   marquee: string[]
   nav: { id: string; label: string }[]
-  headings: Record<'work' | 'elsewhere' | 'experience' | 'stack' | 'about' | 'contact', { label: string; title: string }>
+  headings: Record<'work' | 'elsewhere' | 'experience' | 'stack' | 'security' | 'about' | 'contact', { label: string; title: string }>
   featured: Project[]
   sideProjects: SideProject[]
   experience: Role[]
   stack: { group: string; items: string[] }[]
+  security: {
+    lede: string
+    profileUrl: string
+    profileLabel: string
+    profileCta: string
+    stats: SecurityStat[]
+    hallTitle: string
+    hall: Trophy[]
+  }
   education: { school: string; detail: string; period: string }[]
   highlights: { year: string; label: string }[]
   about: { paragraphs: string[]; educationTitle: string; recognitionTitle: string; languagesLabel: string; languagesValue: string; basedLabel: string }

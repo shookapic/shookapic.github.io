@@ -7,6 +7,7 @@ import Marquee from './components/Marquee.tsx'
 import Nav from './components/Nav.tsx'
 import ProjectGrid from './components/ProjectGrid.tsx'
 import ScrollProgress from './components/ScrollProgress.tsx'
+import Security from './components/Security.tsx'
 import Stack from './components/Stack.tsx'
 import { useContent } from './components/useContent.ts'
 
@@ -30,6 +31,7 @@ export default function App() {
           <ProjectGrid />
           <Experience />
           <Stack />
+          <Security />
           <About />
           <Footer />
         </div>

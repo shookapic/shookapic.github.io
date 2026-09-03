@@ -752,6 +752,118 @@ a {
   margin-top: 0;
 }
 
+/* ------------------------------------------------------------ security -- */
+
+.sec-lede {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  line-height: 1.6;
+  color: var(--fg-soft);
+  max-width: 62ch;
+}
+
+/* Same scoreboard grammar as the hero stats — hairline gaps showing the line
+   colour through, so four figures read as one instrument panel. */
+.sec-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  margin-top: clamp(30px, 4vw, 44px);
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.sec-stat {
+  display: flex;
+  flex-direction: column;
+  background: var(--raised);
+  padding: 20px 22px;
+}
+
+.sec-stat-value {
+  font-family: var(--mono);
+  font-size: clamp(1.35rem, 3vw, 1.85rem);
+  font-weight: 500;
+  color: var(--signal);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.sec-stat-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.sec-stat-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+  margin-top: 4px;
+}
+
+.sec-hall-title {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+  margin-top: clamp(40px, 6vw, 60px);
+}
+
+.sec-hall {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+/* The trophy case. A card is a plaque: the accent rule down its left edge is
+   the only ornament, and it fills in on hover for the ones you can open. */
+.sec-trophy {
+  display: block;
+  height: 100%;
+  padding: 22px 24px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--signal);
+  border-radius: 3px;
+  transition: border-color 160ms var(--ease), transform 160ms var(--ease);
+}
+
+.sec-trophy.is-link:hover {
+  border-color: var(--fg);
+  border-left-color: var(--signal);
+  transform: translateY(-2px);
+}
+
+.sec-trophy-meta {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.sec-trophy-title {
+  font-size: 1.15rem;
+  font-stretch: 108%;
+  margin-top: 8px;
+}
+
+.sec-trophy-detail {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-soft);
+  margin-top: 10px;
+}
+
 /* --------------------------------------------------------------- about -- */
 
 .about {
@@ -1332,6 +1444,10 @@ a {
 /* ---------------------------------------------------------- responsive -- */
 
 @media (max-width: 1024px) {
+  .sec-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
   .about {
     grid-template-columns: 1fr;
   }
@@ -1346,7 +1462,8 @@ a {
     font-size: 16px;
   }
 
-  .stats {
+  .stats,
+  .sec-stats {
     grid-template-columns: 1fr;
   }
 
@@ -1462,7 +1579,8 @@ a {
     transform: none;
   }
 
-  .side:hover {
+  .side:hover,
+  .sec-trophy.is-link:hover {
     transform: none;
   }
 
