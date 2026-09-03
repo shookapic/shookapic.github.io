@@ -1,0 +1,26 @@
+{
+  "short_name": "C. Roulof",
+  "name": "Cédric Roulof — Software engineer",
+  "description": "Fullstack and systems developer in Paris. Web applications, REST APIs, and developer tooling on LLVM/Clang.",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "16x16 32x32 48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#f5f1e4",
+  "background_color": "#f5f1e4"
+}

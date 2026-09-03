@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- CR monogram, rendered from Archivo. Raster only: a favicon SVG cannot
+         reliably load a webfont, and a hand-traced outline would drift from
+         the typeface the rest of the site uses. -->
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/logo192.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#f5f1e4" />
+
+    <!-- Resolve the theme before first paint, otherwise dark-mode visitors get
+         a flash of the cream page while React boots. -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('theme')
+          var theme =
+            saved === 'light' || saved === 'dark'
+              ? saved
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+          document.documentElement.dataset.theme = theme
+          document
+            .querySelector('meta[name="theme-color"]')
+            .setAttribute('content', theme === 'dark' ? '#14140f' : '#f5f1e4')
+        } catch (e) {}
+      })()
+    </script>
+
+    <title>Cédric Roulof — Software engineer</title>
+    <meta
+      name="description"
+      content="Cédric Roulof — fullstack and systems developer based in Paris. A year of production experience across e-commerce, public sector and enterprise, plus compiler tooling on LLVM/Clang. Selected work, experience, stack and CV."
+    />
+    <link rel="canonical" href="https://shookapic.github.io/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://shookapic.github.io/" />
+    <meta property="og:title" content="Cédric Roulof — Software engineer" />
+    <meta
+      property="og:description"
+      content="Fullstack and systems developer in Paris. Web applications, REST APIs, and developer tooling on LLVM/Clang."
+    />
+    <meta property="og:image" content="https://shookapic.github.io/logo512.png" />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:opsz,wght@6..72,300..600&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" crossorigin src="/assets/index-BB8xMveb.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-C9qRNxdu.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
