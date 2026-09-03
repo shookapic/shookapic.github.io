@@ -7,7 +7,7 @@ const fr: Content = {
     note: 'développement fullstack & systèmes',
     location: 'Paris, France — originaire de La Réunion',
     availability: 'Ouvert aux opportunités en France ou en télétravail',
-    email: 'cedric.roulof1@gmail.com',
+    email: 'pro@cedricroulof.com',
     github: 'https://github.com/Shookapic',
     githubLabel: 'github.com/shookapic',
     lede: `Développeur fullstack et systèmes, un an d'expérience en production dans l'e-commerce, le secteur public et l'entreprise. Je livre des applications web et des API REST, et je construis de l'outillage développeur sur LLVM/Clang. Français natif, anglais professionnel.`,
@@ -274,8 +274,8 @@ const fr: Content = {
   contact: { title: 'Dites-moi ce que vous construisez.' },
 
   cvs: [
-    { lang: 'EN', code: 'en', label: 'English', file: '/assets/EN-Cedric_Roulof_CV.pdf' },
-    { lang: 'FR', code: 'fr', label: 'Français', file: '/assets/FR-Cedric_Roulof_CV.pdf' },
+    { lang: 'EN', code: 'en', label: 'English', file: '/assets/CV_Cedric_Roulof_EN.pdf' },
+    { lang: 'FR', code: 'fr', label: 'Français', file: '/assets/CV_Cedric_Roulof_FR.pdf' },
   ],
 }
 

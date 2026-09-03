@@ -7,7 +7,7 @@ const en: Content = {
     note: 'fullstack & systems development',
     location: 'Paris, France — from Réunion Island',
     availability: 'Open for work in France or remote',
-    email: 'cedric.roulof1@gmail.com',
+    email: 'pro@cedricroulof.com',
     github: 'https://github.com/Shookapic',
     githubLabel: 'github.com/shookapic',
     lede: `Fullstack and systems developer with a year of production experience across e-commerce, public sector and enterprise. I ship web applications and REST APIs, and I build developer tooling on LLVM/Clang. Native French, professional English.`,
@@ -274,8 +274,8 @@ const en: Content = {
   contact: { title: 'Tell me what you are building.' },
 
   cvs: [
-    { lang: 'EN', code: 'en', label: 'English', file: '/assets/EN-Cedric_Roulof_CV.pdf' },
-    { lang: 'FR', code: 'fr', label: 'Français', file: '/assets/FR-Cedric_Roulof_CV.pdf' },
+    { lang: 'EN', code: 'en', label: 'English', file: '/assets/CV_Cedric_Roulof_EN.pdf' },
+    { lang: 'FR', code: 'fr', label: 'Français', file: '/assets/CV_Cedric_Roulof_FR.pdf' },
   ],
 }
 
