@@ -119,10 +119,16 @@ const en: Content = {
 
   sideProjects: [
     {
-      name: 'Nen',
-      description: 'An open-source 3D battle royale in the browser — real-time multiplayer networking and fluid movement.',
-      tech: ['TypeScript', 'Three.js', 'WebSockets'],
-      url: 'https://github.com/Shookapic/Nen',
+      name: 'StreaMe',
+      description: 'Low-latency iPhone screen mirroring to Windows — hardware decode, zero-copy GPU rendering, 1080p60 under 100 ms on a LAN.',
+      tech: ['C++20', 'Direct3D 11', 'Media Foundation', 'React'],
+      url: 'https://github.com/Shookapic/StreaMe',
+    },
+    {
+      name: 'TinyVM',
+      description: 'A 64-bit virtual machine written from scratch — custom instruction set, assembler, and bytecode interpreter.',
+      tech: ['C++', 'ISA design', 'Bytecode'],
+      url: 'https://github.com/Shookapic/TinyVM',
     },
     {
       name: 'Flowfy',
@@ -131,28 +137,22 @@ const en: Content = {
       url: 'https://github.com/Shookapic/Flowfy',
     },
     {
-      name: 'GPTerminal',
-      description: 'ChatGPT without leaving the terminal.',
-      tech: ['C++'],
-      url: 'https://github.com/Shookapic/GPTerminal',
+      name: 'TheBrickler',
+      description: 'A cross-platform idle game that ships to browser, desktop and mobile from one codebase.',
+      tech: ['TypeScript', 'React', 'Phaser 3', 'Electron', 'Capacitor'],
+      url: 'https://github.com/Shookapic/TheBrickler',
     },
     {
-      name: 'Fractal-Lock',
-      description: 'A lock screen that renders fractals while you are away.',
-      tech: ['Rust'],
-      url: 'https://github.com/Shookapic/Fractal-Lock',
+      name: 'Minishell',
+      description: 'A UNIX shell written in C — parsing, pipes, redirections, job control, no libraries.',
+      tech: ['C', 'POSIX'],
+      url: 'https://github.com/Shookapic/Minishell',
     },
     {
-      name: 'Immune-Defense',
-      description: 'A tower defense game where the towers are your immune system.',
-      tech: ['C#', 'Unity'],
-      url: 'https://github.com/Shookapic/Immune-Defense',
-    },
-    {
-      name: 'Arcade',
-      description: 'A modular arcade machine with three classic games and hot-swappable graphics libraries.',
-      tech: ['C++'],
-      url: 'https://github.com/Shookapic',
+      name: 'MyHunter',
+      description: 'Duck Hunt rebuilt from scratch in C with CSFML, in a single week.',
+      tech: ['C', 'CSFML'],
+      url: 'https://github.com/Shookapic/MyHunter',
     },
   ],
 
